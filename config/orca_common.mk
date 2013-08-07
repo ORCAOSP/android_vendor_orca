@@ -1,12 +1,11 @@
+SUPERUSER_EMBEDDED := true
+SUPERUSER_PACKAGE_PREFIX := com.android.settings.cyanogenmod.superuser
+
 # Set audio
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.ringtone=Themos.ogg \
     ro.config.notification_sound=Proxima.ogg \
     ro.config.alarm_alert=Cesium.ogg
-
-# SuperUser
-SUPERUSER_EMBEDDED := true
-SUPERUSER_PACKAGE_PREFIX := com.android.settings.orca.superuser
 
 # Orca Packages
 PRODUCT_PACKAGES += \
@@ -17,14 +16,8 @@ PRODUCT_PACKAGES += \
 
 # More Packages
 PRODUCT_PACKAGES += \
-    Superuser \
-    su \
     Apollo \
     CMFileManager 
-    
-# PA Packages
-PRODUCT_PACKAGES += \
-    ParanoidPreferences    
 
 # APPS TO COPY
 PRODUCT_COPY_FILES += \
@@ -53,10 +46,19 @@ PRODUCT_COPY_FILES +=  \
 # Bring in all video files
 $(call inherit-product, frameworks/base/data/videos/VideoPackage2.mk)
 
-# SuperSU and sysrw
-PRODUCT_COPY_FILES += \
-    vendor/orca/prebuilt/common/xbin/sysrw:system/xbin/sysrw \
-    vendor/orca/prebuilt/common/xbin/sysro:system/xbin/sysro
+# Exclude prebuilt paprefs from builds if the flag is set
+ifneq ($(PREFS_FROM_SOURCE),true)
+    PRODUCT_COPY_FILES += \
+        vendor/orca/prebuilt/common/apk/ParanoidPreferences.apk:system/app/ParanoidPreferences.apk
+else
+    # Build paprefs from sources
+    PRODUCT_PACKAGES += \
+        ParanoidPreferences
+endif
+
+# ParanoidOTA
+PRODUCT_PACKAGES += \
+    ParanoidOTA
 
 ifneq ($(ORCA_BOOTANIMATION_NAME),)
     PRODUCT_COPY_FILES += \
@@ -73,6 +75,11 @@ SUPERUSER_EMBEDDED := true
 PRODUCT_PROPERTY_OVERRIDES += \
     persist.sys.root_access=3
 
+# Superuser
+PRODUCT_PACKAGES += \
+	Superuser \
+    su
+
 # device common prebuilts
 ifneq ($(DEVICE_COMMON),)
     -include vendor/orca/prebuilt/$(DEVICE_COMMON)/prebuilt.mk
@@ -86,9 +93,6 @@ BOARD := $(subst orca_,,$(TARGET_PRODUCT))
 # Orca Overlays
 PRODUCT_PACKAGE_OVERLAYS += vendor/orca/overlay/common
 PRODUCT_PACKAGE_OVERLAYS += vendor/orca/overlay/$(TARGET_PRODUCT)
-
-# ParanoidAndroid Overlays
-PRODUCT_PACKAGE_OVERLAYS += vendor/orca/prebuilt/preferences/$(TARGET_PRODUCT)
 
 # Allow device family to add overlays and use a same prop.conf
 ifneq ($(OVERLAY_TARGET),)
