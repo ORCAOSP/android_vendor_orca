@@ -1,3 +1,6 @@
+SUPERUSER_EMBEDDED := true
+SUPERUSER_PACKAGE_PREFIX := com.android.settings.cyanogenmod.superuser
+
 # Set audio
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.config.ringtone=Themos.ogg \
@@ -34,6 +37,11 @@ PRODUCT_COPY_FILES += \
     vendor/orca/prebuilt/common/bin/backuptool.sh:system/bin/backuptool.sh \
     vendor/orca/prebuilt/common/bin/backuptool.functions:system/bin/backuptool.functions \
     vendor/orca/prebuilt/common/bin/50-backupScript.sh:system/addon.d/50-backupScript.sh
+    
+# Bring in camera effects
+PRODUCT_COPY_FILES +=  \
+    vendor/cm/prebuilt/common/media/LMprec_508.emd:system/media/LMprec_508.emd \
+    vendor/cm/prebuilt/common/media/PFFprec_600.emd:system/media/PFFprec_600.emd    
 
 # Bring in all video files
 $(call inherit-product, frameworks/base/data/videos/VideoPackage2.mk)
@@ -69,6 +77,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 # Superuser
 PRODUCT_PACKAGES += \
+	Superuser \
     su
 
 # device common prebuilts
