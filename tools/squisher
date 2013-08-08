@@ -100,7 +100,7 @@ else
 	OUTFILE=$OUT/update-squished.zip
 fi
 
-# Copy ParanoidPreferences overlays
+# Copy Orca overlays
 printf "Copying overlay preferences for $OVERLAYTARGET..."
 echo
 mkdir $REPACK/ota/system/etc/paranoid/preferences
