@@ -18,20 +18,17 @@ $(call inherit-product, device/lge/mako/full_mako.mk)
 # Define Orca bootanimation size
 ORCA_BOOTANIMATION_NAME := XHDPI
 
-# OVERLAY_TARGET adds overlay asset source
-OVERLAY_TARGET := pa_xhdpi
+# Inherit some common Orca stuff.
+$(call inherit-product, vendor/orca/config/common_full_phone.mk)
 
-# Build paprefs from sources
-PREFS_FROM_SOURCE ?= true
+# Enhanced NFC
+$(call inherit-product, vendor/orca/config/nfc_enhanced.mk)
 
-# Include Orca common configuration
-include vendor/orca/config/orca_common.mk
+# Inherit device settings
+$(call inherit-product, vendor/orca/config/common_nexus.mk)
 
-# Inherit GSM common stuff
-include vendor/orca/config/gsm.mk
-
-# Product Package Extras - Repos can be added manually or via addprojects.py
--include vendor/orca/packages/mako.mk
+# Inherit led flash settings
+$(call inherit-product, vendor/orca/config/common_ledflash.mk)
 
 # Override AOSP build properties
 PRODUCT_NAME := orca_mako
@@ -39,7 +36,3 @@ PRODUCT_BRAND := Google
 PRODUCT_MODEL := Nexus 4
 PRODUCT_MANUFACTURER := LGE
 PRODUCT_BUILD_PROP_OVERRIDES += PRODUCT_NAME=occam BUILD_FINGERPRINT="google/occam/mako:4.3/JSS15J/737497:user/release-keys" PRIVATE_BUILD_DESC="occam-user 4.3 JSS15J 737497 release-keys"
-
-# Copy Mako specific prebuilts
-PRODUCT_COPY_FILES += \
-    vendor/orca/prebuilt/common/apk/ParanoidPreferences.apk:system/app/ParanoidPreferences.apk 
